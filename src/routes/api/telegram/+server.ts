@@ -159,24 +159,29 @@ export async function POST(event) {
   }
   try {
     console.log({messageText, chatID, messageID, data})
-    if (messageText.startsWith('/list')) {
-      try {
-        const runs = await listWorkflowRuns()
-        const message = runs.reverse().map(r => `• ${workflowEmoji(r)} [${r.name}](${r.html_url})`).join('\n')
-        await respondWith(message)
-      } catch (error) {
-        handleError(error)
-        await respondWith("error handling the /list command: " + error.message)
-      }
-    } else if (messageText.startsWith('/build')) {
-      const buildCmd = messageText.slice(6).trim()
-      try {
-        const buildArgs = parseBuildArgs(buildCmd, for_user)
-        const workflow = await launchWorkflow(buildArgs)
-        await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
-      } catch (error) {
-        handleError(error)
-        await respondWith("error handling the /build command: " + error.message)
+    if (messageText.startsWith('/')) {
+      const messageWords = messageText.split(' ')
+      const command = messageWords[0]
+      const args = messageWords.slice(1).join(' ')
+      
+      if (command.startsWith('/list')) {
+        try {
+          const runs = await listWorkflowRuns()
+          const message = runs.reverse().map(r => `• ${workflowEmoji(r)} [${r.name}](${r.html_url})`).join('\n')
+          await respondWith(message)
+        } catch (error) {
+          handleError(error)
+          await respondWith("error handling the /list command: " + error.message)
+        }
+      } else if (command.startsWith('/build')) {
+        try {
+          const buildArgs = parseBuildArgs(args, for_user)
+          const workflow = await launchWorkflow(buildArgs)
+          await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
+        } catch (error) {
+          handleError(error)
+          await respondWith("error handling the /build command: " + error.message)
+        }
       }
     } else {
       await respondWith(botHelp)
