@@ -73,6 +73,10 @@ export async function ourFetch(url, args) {
 export class EventMethods {
   constructor(event) {
     this.event = event
+    this.data = null
+  }
+
+  async setup() {
     this.data = await event.request.json()
   }
 

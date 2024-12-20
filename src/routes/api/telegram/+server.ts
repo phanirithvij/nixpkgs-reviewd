@@ -11,6 +11,7 @@ export async function POST(event) {
   const genericNOKResponse = new Response(":(", {status: 500})
 
   const methods = new EventMethods(event)
+  await methods.setup()
 
   const messageText = methods.data?.message?.text;
   if (!messageText) return genericOKResponse; // update is not a message
