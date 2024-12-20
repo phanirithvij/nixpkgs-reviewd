@@ -51,6 +51,7 @@ export async function POST(event) {
       throw "that workflow is not defined on " + repo
     }
     const thatWorkflow = thatWorkflows[0].id
+    console.log({thatWorkflow})
     const workflowTrigger = await (await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
       method: 'POST',
       headers: {
