@@ -6,6 +6,8 @@ import { json } from '@sveltejs/kit'
 export async function POST(event) {
   const methods = new EventMethods(event)
   await methods.setup()
+  console.log(methods.data)
+  return await json({ok: true})
 
   const workflows = await methods.listWorkflowRuns()
   const selectedWorkflow = workflows.find(w => String(w.id) === event.params.workflow)
