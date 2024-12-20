@@ -162,7 +162,7 @@ export async function POST(event) {
     if (messageText.startsWith('/list')) {
       try {
         const runs = await listWorkflowRuns()
-        const message = runs.map(r => `• ${workflowEmoji(r)} [${r.name}](${r.html_url})`).join('\n')
+        const message = runs.reverse().map(r => `• ${workflowEmoji(r)} [${r.name}](${r.html_url})`).join('\n')
         await respondWith(message)
       } catch (error) {
         handleError(error)
