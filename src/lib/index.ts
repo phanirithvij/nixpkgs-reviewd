@@ -63,7 +63,10 @@ export async function ourFetch(url, args) {
   try {
     ret = JSON.parse(text)
   } catch {}
-  console.log({message: (args.method ?? "GET") + " " + url, ret})
+  console.log({
+    message: (args.method ?? "GET") + " " + url,
+    // ret
+  })
   return {
     status: res.status,
     data: ret
@@ -139,7 +142,7 @@ export class EventMethods {
 
   async getWorkflowId() {
     const workflowList = await this.github('GET', `repos/${repo}/actions/workflows`)
-    console.log({workflowList})
+    // console.log({workflowList})
     const thatWorkflows = workflowList.data.workflows.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
     if (thatWorkflows.length == 0) {
       throw new Error("that workflow is not defined on " + repo)
