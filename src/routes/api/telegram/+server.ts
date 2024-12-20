@@ -20,7 +20,6 @@ export async function POST(event) {
   if (!for_user) return genericOKResponse; // unauthorized
 
   try {
-    console.log({messageText, chatID, messageID, data})
     if (messageText.startsWith('/')) {
       const messageWords = messageText.split(' ')
       const command = messageWords[0]
