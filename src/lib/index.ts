@@ -92,7 +92,7 @@ export class EventMethods {
       body: JSON.stringify(args)
     })
   }
-  async telegram(url, args) {
+  async telegram(method, url, args) {
     return await ourFetch(`https://api.telegram.org/bot${this.event.platform.env.TELEGRAM_TOKEN}/${url}`, {
       method,
       headers: {
