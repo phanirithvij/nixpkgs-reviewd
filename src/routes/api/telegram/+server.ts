@@ -42,7 +42,10 @@ async function ourFetch(url, args) {
     ret = JSON.parse(text)
   } catch {}
   console.log({message: (args.method ?? "GET") + " " + url, ret})
-  return ret
+  return {
+    status: res.status,
+    data: ret
+  }
 }
 
 
@@ -68,7 +71,7 @@ export async function POST(event) {
       }
     })
     console.log({workflowList})
-    const thatWorkflows = workflowList.workflows.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
+    const thatWorkflows = workflowList.data.workflows.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
     if (thatWorkflows.length == 0) {
       throw new Error("that workflow is not defined on " + repo)
     }
@@ -87,7 +90,9 @@ export async function POST(event) {
       })
     }) // returns empty string
     console.log({message: "workflow trigger", workflowTrigger})
-
+    if (workflowTrigger.status != 204) {
+      throw new Error(workflowTrigger.data.message)
+    }
     const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
       headers: {
         'Accept': 'application/vnd.github+json',
@@ -95,7 +100,7 @@ export async function POST(event) {
         'Authorization': `Bearer ${GITHUB_TOKEN}`
       }
     })
-    const filteredRuns = runs.workflow_runs.filter(w => w.name.includes(String(args.pr)))
+    const filteredRuns = runs.data.workflow_runs.filter(w => w.name.includes(String(args.pr)))
     if (filteredRuns.length == 0) {
       throw new Error("not created")
     }
