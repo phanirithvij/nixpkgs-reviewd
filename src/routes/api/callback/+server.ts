@@ -34,7 +34,7 @@ export async function POST(event) {
     console.error({message: "Can't detect trigger owner", data: methods.data})
     return genericOK
   }
-  const emoji = workflowEmoji(selectedWorkflow)
+  const emoji = workflowEmoji(workflow_run)
 
   return await json(await methods.telegramReply(`${emoji} **${name}**\n\n• [Result](${html_url})\n• [PR](https://github.com/NixOS/nixpkgs/pull/${pr})`, triggerChatID), {status: 200})
 }
