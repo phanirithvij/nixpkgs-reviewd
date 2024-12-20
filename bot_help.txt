@@ -1,5 +1,5 @@
 `/build`: Launch nixpkgs-review build
-* First argument must be the nixpkgs PR number
-* `+darwin`: Also run x86_64-darwin and aarch64-darwin
-* `+nofreespace`: Do not run workflow to setup more free space in the runner. Only supports and runs by default in x86_64-linux
-* The rest of the arguments: extra arguments for nixpkgs-review such as `-p` to run specific NixOS tests
+• First argument must be the nixpkgs PR number
+• `+darwin`: Also run x86_64-darwin and aarch64-darwin
+• `+nofreespace`: Do not run workflow to setup more free space in the runner. Only supports and runs by default in x86_64-linux
+• The rest of the arguments: extra arguments for nixpkgs-review such as `-p` to run specific NixOS tests
