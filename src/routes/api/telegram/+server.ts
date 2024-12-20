@@ -21,10 +21,10 @@ function parseBuildArgs(cmdArgs) {
   }
   let cmdList = cmd.split(' ').filter(s => s.length > 0)
   let pr = parseInt(cmdList[0])
-  args['pr'] = pr
   if (isNaN(pr)) {
     throw new Error("bad pr name: " + cmdList[0])
   }
+  args['pr'] = String(pr)
   cmd = cmdList.slice(1).join(' ')
   args['extra-args'] = cmd
   return args
