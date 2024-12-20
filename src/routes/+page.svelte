@@ -33,7 +33,6 @@
   {#if action.path == '.github/workflows/nixpkgs-review.yml'}
     <li>
       {workflowEmoji(action)}
-      " "
       <a target="_blank" href="{action.html_url}">
         { action.name }
       </a>
