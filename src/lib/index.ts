@@ -127,7 +127,7 @@ export class EventMethods {
       messageID = this.data?.message?.message_id;
     }
     console.log({type: 'respond', message, chatID, messageID})
-    body = {
+    let body = {
       chat_id: chatID,
       text: message,
       parse_mode: "Markdown"
