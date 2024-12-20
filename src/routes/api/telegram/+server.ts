@@ -2,9 +2,6 @@ import { users, repo } from '#/settings.json'
 
 import { json } from '@sveltejs/kit'
 
-const genericOKResponse = new Response(":)", {status: 200})
-const genericNOKResponse = new Response(":(", {status: 500})
-
 function parseBuildArgs(cmdArgs) {
   let cmd = cmdArgs
   let args = {}
@@ -29,6 +26,8 @@ function parseBuildArgs(cmdArgs) {
 }
 
 export async function POST(event) {
+  const genericOKResponse = new Response(":)", {status: 200})
+  const genericNOKResponse = new Response(":(", {status: 500})
   const { TELEGRAM_TOKEN } = event.platform.env
   const data = await event.request.json();
   const messageText = data?.message?.text;
