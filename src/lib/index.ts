@@ -77,7 +77,7 @@ export class EventMethods {
   }
 
   async setup() {
-    this.data = await event.request.json()
+    this.data = await this.event.request.json()
   }
 
   async github(method, url, args) {
@@ -86,14 +86,14 @@ export class EventMethods {
       headers: {
         'Accept': 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
-        'Authorization': `Bearer ${event.platform.env.GITHUB_TOKEN}`,
+        'Authorization': `Bearer ${this.event.platform.env.GITHUB_TOKEN}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(args)
     })
   }
   async telegram(url, args) {
-    return await ourFetch(`https://api.telegram.org/bot${event.platform.env.TELEGRAM_TOKEN}/${url}`, {
+    return await ourFetch(`https://api.telegram.org/bot${this.event.platform.env.TELEGRAM_TOKEN}/${url}`, {
       method,
       headers: {
         'Content-Type': 'application/json',
@@ -103,14 +103,14 @@ export class EventMethods {
   }
 
   telegramUser() {
-    const chatID = data?.message?.from?.id;
+    const chatID = this.data?.message?.from?.id;
     if (!chatID) return null
     return users[String(chatID)]
   }
 
   async telegramReply(message: string) {
     const chatID = this.data?.message?.from?.id;
-    const messageID = data?.message?.message_id;
+    const messageID = this.data?.message?.message_id;
     console.log({type: 'respond', message, chatID, messageID})
     return await this.telegram('POST', 'sendMessage', {
       chat_id: chatID,
