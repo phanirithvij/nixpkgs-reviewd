@@ -123,7 +123,7 @@ export class EventMethods {
   }
 
   async getWorkflowId() {
-    const workflowList = await self.github('GET', `repos/${repo}/actions/workflows`, {})
+    const workflowList = await this.github('GET', `repos/${repo}/actions/workflows`, {})
     console.log({workflowList})
     const thatWorkflows = workflowList.data.workflows.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
     if (thatWorkflows.length == 0) {
@@ -133,13 +133,13 @@ export class EventMethods {
   }
 
   async listWorkflowRuns() {
-    const runs = self.github('GET', `repos/${repo}/actions/runs`, {})
+    const runs = this.github('GET', `repos/${repo}/actions/runs`, {})
     return runs.data.workflow_runs.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
   }
 
   async launchWorkflow(args) {
     const thatWorkflow = await this.getWorkflowId()
-    const workflowTrigger = await self.github('POST', `repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
+    const workflowTrigger = await this.github('POST', `repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
       ref: 'main',
       inputs: args
     })
