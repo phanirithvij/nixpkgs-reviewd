@@ -43,7 +43,8 @@ export async function POST(event) {
     const workflowList = await (await fetch(`https://api.github.com/repos/${repo}/actions/workflows`, {
       headers: {
         'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Authorization': `Bearer ${GITHUB_TOKEN}`
       }
     })).json()
     console.log({workflowList})
@@ -70,7 +71,8 @@ export async function POST(event) {
     const res = await fetch(`https://api.github.com/repos/${repo}/actions/runs`, {
       headers: {
         'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Authorization': `Bearer ${GITHUB_TOKEN}`
       }
     })
     const runs = await res.json()
