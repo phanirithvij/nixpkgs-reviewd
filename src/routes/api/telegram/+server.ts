@@ -1,5 +1,5 @@
 import { users, repo } from '#/settings.json'
-import botHelp from '#/bot_help.txt'
+import botHelp from '#/bot_help.txt?raw'
 
 import { json } from '@sveltejs/kit'
 
