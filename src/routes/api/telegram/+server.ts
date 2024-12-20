@@ -69,7 +69,7 @@ export async function POST(event) {
   const for_user = users[String(chatID)]
   if (!for_user) return genericOKResponse; // unauthorized
 
-  async function launchWorkflow(args) {
+  async function getWorkflowId() {
     const workflowList = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows`, {
       headers: {
         'Accept': 'application/vnd.github+json',
@@ -82,7 +82,22 @@ export async function POST(event) {
     if (thatWorkflows.length == 0) {
       throw new Error("that workflow is not defined on " + repo)
     }
-    const thatWorkflow = thatWorkflows[0].id
+    return thatWorkflows[0].id
+  }
+
+  async function listWorkflowRuns() {
+    const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Authorization': `Bearer ${GITHUB_TOKEN}`
+      }
+    })
+    return runs.data.workflow_runs.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
+  }
+
+  async function launchWorkflow(args) {
+    const thatWorkflow = await getWorkflowId()
     const workflowTrigger = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
       method: 'POST',
       headers: {
@@ -101,14 +116,8 @@ export async function POST(event) {
       throw new Error(workflowTrigger.data.message)
     }
     await sleep(2000)
-    const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
-      headers: {
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'Authorization': `Bearer ${GITHUB_TOKEN}`
-      }
-    })
-    const filteredRuns = runs.data.workflow_runs.filter(w => w.name.includes(String(args.pr)))
+    const runs = await listWorkflowRuns()
+    const filteredRuns = runs.filter(w => w.name.includes(String(args.pr)))
     if (filteredRuns.length == 0) {
       throw new Error("not created")
     }
@@ -133,7 +142,16 @@ export async function POST(event) {
   }
   try {
     console.log({messageText, chatID, messageID, data})
-    if (messageText.startsWith('/build')) {
+    if (messageText.startsWith('/list')) {
+      try {
+        const runs = await listWorkflowRuns()
+        const message = runs.map(r => `• [${r.name}](${r.html_url})`).join('\n')
+        await respondWith(message)
+      } catch (error) {
+        handleError(error)
+        await respondWith("error handling the /list command: " + error.message)
+      }
+    } else if (messageText.startsWith('/build')) {
       const buildCmd = messageText.slice(6).trim()
       try {
         const buildArgs = parseBuildArgs(buildCmd, for_user)
