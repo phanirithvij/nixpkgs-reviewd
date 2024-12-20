@@ -25,6 +25,19 @@ function parseBuildArgs(cmdArgs) {
   return args
 }
 
+async function ourFetch(url, args) {
+  const res = await fetch(url, args)
+  let ret = null
+  try {
+    ret = await res.json()
+  }
+  catch {
+    ret = await res.text()
+  }
+  console.log({message: (args.method ?? "GET") + " " + url, ret})
+  return ret
+}
+
 
 export async function POST(event) {
   const genericOKResponse = new Response(":)", {status: 200})
@@ -40,21 +53,20 @@ export async function POST(event) {
   if (!users[String(chatID)]) return genericOKResponse; // unauthorized
 
   async function launchWorkflow(args) {
-    const workflowList = await (await fetch(`https://api.github.com/repos/${repo}/actions/workflows`, {
+    const workflowList = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows`, {
       headers: {
         'Accept': 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'Authorization': `Bearer ${GITHUB_TOKEN}`
       }
-    })).json()
+    })
     console.log({workflowList})
     const thatWorkflows = workflowList.workflows.filter(w => w.path === ".github/workflows/bump.yml")
     if (thatWorkflows.length == 0) {
       throw "that workflow is not defined on " + repo
     }
     const thatWorkflow = thatWorkflows[0].id
-    console.log({thatWorkflow})
-    const workflowTrigger = await (await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
+    const workflowTrigger = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,16 +78,15 @@ export async function POST(event) {
         ref: 'main',
         inputs: args
       })
-    })).text() // actually it returns an empty string
+    }) // returns empty string
 
-    const res = await fetch(`https://api.github.com/repos/${repo}/actions/runs`, {
+    const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
       headers: {
         'Accept': 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'Authorization': `Bearer ${GITHUB_TOKEN}`
       }
     })
-    const runs = await res.json()
     const filteredRuns = runs.workflow_runs.filter(w => w.name.includes(String(args.pr)))
     if (filteredRuns.length == 0) {
       throw "not created"
@@ -84,7 +95,7 @@ export async function POST(event) {
   }
   async function respondWith(message: string) {
     console.log({type: 'respond', message, chatID, messageID})
-    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    return await ourFetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,9 +109,6 @@ export async function POST(event) {
         }
       })
     })
-    const ret = await res.json()
-    console.log({type: 'respond_body', ret})
-    return ret
   }
   try {
     console.log({messageText, chatID, messageID, data})
@@ -110,8 +118,8 @@ export async function POST(event) {
         const buildArgs = parseBuildArgs(buildCmd)
         const workflow = await launchWorkflow(buildArgs)
         await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
-      } catch (e) {
-        console.error({error: e.stack})
+      } catch (error) {
+        console.error({error})
         await respondWith("error handling the /build command: " + e)
       }
     } else {
@@ -119,8 +127,8 @@ export async function POST(event) {
     }
 
     return genericOKResponse
-  } catch (e) {
-    console.log({error: e.stack})
+  } catch (error) {
+    console.log({error})
     return genericNOKResponse
   }
 }
