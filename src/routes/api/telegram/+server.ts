@@ -11,7 +11,7 @@ async function sleep(time) {
   return new Promise((res, rej) => setTimeout(res, time))
 }
 
-function parseBuildArgs(cmdArgs) {
+function parseBuildArgs(cmdArgs, for_user) {
   let cmd = cmdArgs
   let args = {}
   args['x86_64-linux'] = true
@@ -31,6 +31,7 @@ function parseBuildArgs(cmdArgs) {
   args['pr'] = String(pr)
   cmd = cmdList.slice(1).join(' ')
   args['extra-args'] = cmd
+  args['for'] = for_user
   return args
 }
 
@@ -64,7 +65,8 @@ export async function POST(event) {
   if (!chatID) return genericOKResponse; // chatId is missing, should never happen but check anyway
   const messageID = data?.message?.message_id;
   if (!messageID) return genericOKResponse; // message id to reply, should never happen but check anyway
-  if (!users[String(chatID)]) return genericOKResponse; // unauthorized
+  for_user = users[String(chatID)]
+  if (!for_user) return genericOKResponse; // unauthorized
 
   async function launchWorkflow(args) {
     const workflowList = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows`, {
@@ -133,7 +135,7 @@ export async function POST(event) {
     if (messageText.startsWith('/build')) {
       const buildCmd = messageText.slice(6).trim()
       try {
-        const buildArgs = parseBuildArgs(buildCmd)
+        const buildArgs = parseBuildArgs(buildCmd, for_user)
         const workflow = await launchWorkflow(buildArgs)
         await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
       } catch (error) {
