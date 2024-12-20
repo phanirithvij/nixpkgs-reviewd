@@ -73,7 +73,7 @@ export async function POST(event) {
 
     // TODO: handle message
 
-    return json(users, {status: 201})
+    return await json(users, {status: 201})
   } catch (e) {
     console.log({error})
     return genericNOKResponse
