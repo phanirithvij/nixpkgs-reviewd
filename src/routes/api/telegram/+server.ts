@@ -7,6 +7,10 @@ function handleError(e) {
   console.error({message, stack})
 }
 
+async function sleep(time) {
+  return new Promise((res, rej) => setTimeout(res, time))
+}
+
 function parseBuildArgs(cmdArgs) {
   let cmd = cmdArgs
   let args = {}
@@ -93,6 +97,7 @@ export async function POST(event) {
     if (workflowTrigger.status != 204) {
       throw new Error(workflowTrigger.data.message)
     }
+    await sleep(2000)
     const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
       headers: {
         'Accept': 'application/vnd.github+json',
