@@ -1,0 +1,14 @@
+name = "nixpkgs-reviewd"
+main = "./.cloudflare/worker.js"
+site.bucket = "./.cloudflare/public"
+
+workers_dev = true
+compatibility_date = "2022-02-02"
+
+[build]
+command = "npm run build"
+
+# wrangler.toml (wrangler v3.88.0^)
+[observability.logs]
+enabled = true
+

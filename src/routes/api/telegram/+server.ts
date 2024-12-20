@@ -1,11 +1,14 @@
 import users from '#/users.json'
 
-const { TELEGRAM_TOKEN } = env
+import { json } from '@sveltejs/kit'
+
+// import { TELEGRAM_TOKEN } from '$env/static/private'
+
 
 const genericOKResponse = new Response(":)", {status: 200})
 
 export async function POST(event) {
-  const data = await request.json();
+  const data = await event.request.json();
   const messageText = data?.message?.text;
   if (!messageText) return genericOKResponse; // update is not a message
   const chatID = data?.message?.from?.id;
@@ -25,10 +28,5 @@ export async function POST(event) {
       }
     }
   })
-  return new Response(JSON.stringify(users), {
-    status: 201,
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  })
+  return json(users, {status: 201})
 }
