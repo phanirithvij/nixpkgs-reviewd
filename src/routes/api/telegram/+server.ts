@@ -47,6 +47,7 @@ export async function POST(event) {
       body: JSON.stringify({
         chat_id: chatID,
         text: message,
+        parse_mode: "Markdown",
         reply_parameters: {
           message_id: messageID
         }
