@@ -19,8 +19,11 @@ export async function POST(event) {
     return await json({error: "Can't detect trigger owner"}, {status: 400})
   }
   const triggerUser = triggerData[1]
-  const triggerChatIDs = Object.keys(users).find(k => users[k] === String(id))
+  const triggerChatIDs = Object.keys(users).find(k => users[k] === String(triggerUser))
   console.log({triggerChatIDs, selectedWorkflow, triggerData})
+  if (triggerChatIDs.length == 0) {
+    return await json({error: "Can't detect trigger owner"}, {status: 400})
+  }
   const triggerChatID = triggerChatIDs[0]
   const emoji = workflowEmoji(selectedWorkflow)
 
