@@ -133,7 +133,7 @@ export class EventMethods {
   }
 
   async listWorkflowRuns() {
-    const runs = this.github('GET', `repos/${repo}/actions/runs`, {})
+    const runs = await this.github('GET', `repos/${repo}/actions/runs`, {})
     return runs.data.workflow_runs.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
   }
 
