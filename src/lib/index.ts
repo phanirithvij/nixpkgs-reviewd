@@ -80,26 +80,31 @@ export class EventMethods {
     this.data = await this.event.request.json()
   }
 
-  async github(method, url, args) {
-    return await ourFetch(`https://api.github.com/${url}`, {
+  async github(method, url, args = null) {
+    let fetchArgs = {
       method,
       headers: {
         'Accept': 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'Authorization': `Bearer ${this.event.platform.env.GITHUB_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(args)
-    })
+      }
+    }
+    if (args) {
+      fetchArgs.headers['Content-Type'] = 'application/json'
+      fetchArgs.body = JSON.stringify(args)
+    }
+    return await ourFetch(`https://api.github.com/${url}`, fetchArgs)
   }
-  async telegram(method, url, args) {
-    return await ourFetch(`https://api.telegram.org/bot${this.event.platform.env.TELEGRAM_TOKEN}/${url}`, {
+  async telegram(method, url, args = null) {
+    let fetchArgs = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(args)
-    })
+      headers: {},
+    }
+    if (args) {
+      fetchArgs.headers['Content-Type'] = 'application/json'
+      fetchArgs.body = JSON.stringify(args)
+    }
+    return await ourFetch(`https://api.telegram.org/bot${this.event.platform.env.TELEGRAM_TOKEN}/${url}`, fetchArgs)
   }
 
   telegramUser() {
