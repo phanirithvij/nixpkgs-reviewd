@@ -2,6 +2,11 @@ import { users, repo } from '#/settings.json'
 
 import { json } from '@sveltejs/kit'
 
+function handleError(e) {
+  const {message, stack} = e
+  console.error({message, stack})
+}
+
 function parseBuildArgs(cmdArgs) {
   let cmd = cmdArgs
   let args = {}
@@ -119,7 +124,7 @@ export async function POST(event) {
         const workflow = await launchWorkflow(buildArgs)
         await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
       } catch (error) {
-        console.log({error: {...error}})
+        handleError(error)
         await respondWith("error handling the /build command: " + e)
       }
     } else {
@@ -128,7 +133,7 @@ export async function POST(event) {
 
     return genericOKResponse
   } catch (error) {
-    console.log({error: {...error}})
+    handleError(error)
     return genericNOKResponse
   }
 }
