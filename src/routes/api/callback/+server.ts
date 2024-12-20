@@ -4,31 +4,35 @@ import { EventMethods, workflowEmoji } from '$lib'
 import { json } from '@sveltejs/kit'
 
 export async function POST(event) {
+  const genericOK = await json({ok: true})
   const methods = new EventMethods(event)
   await methods.setup()
-  console.log(methods.data)
-  return await json({ok: true})
-
-  const workflows = await methods.listWorkflowRuns()
-  const selectedWorkflow = workflows.find(w => String(w.id) === event.params.workflow)
-  if (!selectedWorkflow) {
-    return await json({error: "Workflow not found"}, {status: 400})
+  const {action, workflow_run} = methods.data
+  if (action !== 'completed') {
+    // irrelevant
+    return genericOK
   }
-  const { id, name, status, conclusion, html_url } = selectedWorkflow
+  console.log(methods.data)
+  // return await json({ok: true})
+
+  const { id, name, status, conclusion, html_url } = workflow_run
   const prData = name.match('#([0-9]*)')
   if (!prData) {
-    return await json({error: "Can't detect PR number"}, {status: 400})
+    console.error({error: "Can't detect PR number", data: methods.data})
+    return genericOK
   }
   const pr = prData[1]
   const triggerData = name.match('for (.*)')
   if (!triggerData) {
-    return await json({error: "Can't detect trigger owner"}, {status: 400})
+    console.error({error: "Can't detect trigger owner", data: methods.data})
+    return genericOK
   }
   const triggerUser = triggerData[1]
   const triggerChatID = Object.keys(users).find(k => users[k] === String(triggerUser))
-  console.log({triggerChatID, selectedWorkflow, triggerData})
+  console.log({triggerChatID, triggerData})
   if (!triggerChatID) {
-    return await json({error: "Can't detect trigger owner"}, {status: 400})
+    console.error({error: "Can't detect trigger owner", data: methods.data})
+    return genericOK
   }
   const emoji = workflowEmoji(selectedWorkflow)
 

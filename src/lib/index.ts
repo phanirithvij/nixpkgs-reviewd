@@ -166,7 +166,7 @@ export class EventMethods {
       throw new Error(workflowTrigger.data.message)
     }
     await sleep(2000)
-    const runs = await listWorkflowRuns()
+    const runs = await this.listWorkflowRuns()
     const filteredRuns = runs.filter(w => w.name.includes(String(args.pr)))
     if (filteredRuns.length == 0) {
       throw new Error("not created")
