@@ -20,7 +20,7 @@ export async function POST(event) {
   }
   const triggerUser = triggerData[1]
   const triggerChatIDs = Object.keys(users).find(k => users[k] === String(id))
-  console.log({triggerChatIDs, selectedWorkflow})
+  console.log({triggerChatIDs, selectedWorkflow, triggerData})
   const triggerChatID = triggerChatIDs[0]
   const emoji = workflowEmoji(selectedWorkflow)
 
