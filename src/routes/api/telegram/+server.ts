@@ -15,12 +15,8 @@ export async function POST(event) {
   const messageID = data?.message?.message_id;
   if (!messageID) return genericOKResponse; // message id to reply, should never happen but check anyway
   if (!users[String(chatID)]) return genericOKResponse; // unauthorized
-
-  try {
-    console.log({messageText, chatID, messageID, data})
-
-    // TODO: handle message
-    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+  async function respondWith(message: string) {
+    return await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,6 +29,13 @@ export async function POST(event) {
         }
       })
     })
+  }
+  try {
+    console.log({messageText, chatID, messageID, data})
+    const res = await respondWith(messageText)
+
+    // TODO: handle message
+
     console.log({result: await res.json()})
     return json(users, {status: 201})
   } catch (e) {
