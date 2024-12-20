@@ -65,7 +65,7 @@ export async function POST(event) {
   if (!chatID) return genericOKResponse; // chatId is missing, should never happen but check anyway
   const messageID = data?.message?.message_id;
   if (!messageID) return genericOKResponse; // message id to reply, should never happen but check anyway
-  for_user = users[String(chatID)]
+  const for_user = users[String(chatID)]
   if (!for_user) return genericOKResponse; // unauthorized
 
   async function launchWorkflow(args) {
