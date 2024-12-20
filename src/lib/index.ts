@@ -77,7 +77,10 @@ export class EventMethods {
   }
 
   async setup() {
-    this.data = await this.event.request.json()
+    this.data = await this.event.request.text()
+    try {
+      this.data = JSON.parse(this.data)
+    } catch {}
   }
 
   async github(method, url, args = null) {
@@ -113,18 +116,25 @@ export class EventMethods {
     return users[String(chatID)]
   }
 
-  async telegramReply(message: string) {
-    const chatID = this.data?.message?.from?.id;
-    const messageID = this.data?.message?.message_id;
+  async telegramReply(message: string, chatID = null, messageID = null) {
+    if (!chatID) {
+      chatID = this.data?.message?.from?.id;
+    }
+    if (!messageID) {
+      messageID = this.data?.message?.message_id;
+    }
     console.log({type: 'respond', message, chatID, messageID})
-    return await this.telegram('POST', 'sendMessage', {
+    body = {
       chat_id: chatID,
       text: message,
-      parse_mode: "Markdown",
-      reply_parameters: {
+      parse_mode: "Markdown"
+    }
+    if (messageID) {
+      body['reply_parameters'] = {
         message_id: messageID
       }
-    })
+    }
+    return await this.telegram('POST', 'sendMessage', body)
   }
 
   async getWorkflowId() {
