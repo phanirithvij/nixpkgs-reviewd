@@ -8,8 +8,8 @@ export async function POST(event) {
   await methods.setup()
 
   const workflows = await methods.listWorkflowRuns()
-  const selectedWorkflows = workflows.filter(w => String(w.id) === event.params.workflow)
-  if (selectedWorkflows.length == 0) {
+  const selectedWorkflow = workflows.find(w => String(w.id) === event.params.workflow)
+  if (!selectedWorkflow) {
     return await json({error: "Workflow not found"}, {status: 400})
   }
   const selectedWorkflow = selectedWorkflows[0]
@@ -19,12 +19,11 @@ export async function POST(event) {
     return await json({error: "Can't detect trigger owner"}, {status: 400})
   }
   const triggerUser = triggerData[1]
-  const triggerChatIDs = Object.keys(users).find(k => users[k] === String(triggerUser))
-  console.log({triggerChatIDs, selectedWorkflow, triggerData})
-  if (triggerChatIDs.length == 0) {
+  const triggerChatID = Object.keys(users).find(k => users[k] === String(triggerUser))
+  console.log({triggerChatID, selectedWorkflow, triggerData})
+  if (!triggerChatID) {
     return await json({error: "Can't detect trigger owner"}, {status: 400})
   }
-  const triggerChatID = triggerChatIDs[0]
   const emoji = workflowEmoji(selectedWorkflow)
 
   return await json(await methods.telegramReply(`${emoji} **${name}**\n [Result](${html_url})`, triggerChatID), {status: 200})
