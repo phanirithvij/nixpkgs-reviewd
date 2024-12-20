@@ -1,5 +1,6 @@
 <script lang="ts">
   import { repo } from "#/settings.json"
+  import { workflowEmoji } from "$lib";
 
   async function updateActions() {
     const res = await fetch(`https://api.github.com/repos/${repo}/actions/runs`, {
@@ -31,8 +32,10 @@
 {#each actionsData.workflow_runs as action}
   {#if action.path == '.github/workflows/nixpkgs-review.yml'}
     <li>
+      {workflowEmoji(action)}
+      " "
       <a target="_blank" href="{action.html_url}">
-        { action.name } ({action.status}, {action.conclusion})
+        { action.name }
       </a>
     </li>
   {/if}
