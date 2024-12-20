@@ -12,7 +12,6 @@ export async function POST(event) {
   if (!selectedWorkflow) {
     return await json({error: "Workflow not found"}, {status: 400})
   }
-  const selectedWorkflow = selectedWorkflows[0]
   const { id, name, status, conclusion, html_url } = selectedWorkflow
   const triggerData = name.match('for (.*)')
   if (!triggerData) {
