@@ -86,6 +86,7 @@ export async function POST(event) {
         inputs: args
       })
     }) // returns empty string
+    console.log({message: "workflow trigger", workflowTrigger})
 
     const runs = await ourFetch(`https://api.github.com/repos/${repo}/actions/runs`, {
       headers: {
