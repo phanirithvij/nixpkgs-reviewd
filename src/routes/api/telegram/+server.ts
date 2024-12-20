@@ -5,6 +5,29 @@ import { json } from '@sveltejs/kit'
 const genericOKResponse = new Response(":)", {status: 200})
 const genericNOKResponse = new Response(":(", {status: 500})
 
+function parseBuildArgs(cmdArgs) {
+  let cmd = cmdArgs
+  let args = {}
+  args['x86_64-linux'] = true
+  if (cmd.includes('+nofreespace')) {
+    args['free-space'] = false
+  }
+  if (cmd.includes('+darwin')) {
+    args['x86_64-darwin'] = true
+    args['aarch64-darwin'] = true
+    cmd = cmd.replace('+darwin', '')
+  }
+  let cmdList = cmd.split(' ').filter(s => s.length > 0)
+  let pr = parseInt(cmdList[0])
+  args['pr'] = pr
+  if (isNaN(pr)) {
+    throw "bad pr name: " + cmdList[0]
+  }
+  cmd = cmdList.slice(1).join(' ')
+  args['cmd'] = cmd
+  return args
+}
+
 export async function POST(event) {
   const { TELEGRAM_TOKEN } = event.platform.env
   const data = await event.request.json();
@@ -32,6 +55,15 @@ export async function POST(event) {
   }
   try {
     console.log({messageText, chatID, messageID, data})
+    if (messageText.startsWith('/build')) {
+      try {
+        const buildCmd = messageText.slice(6).trim()
+        const buildArgs = parseBuildArgs(buildCmd)
+        await respondWith("command is valid 👍")
+      } catch (e) {
+        await respondWith("error handling the /build command: " + e)
+      }
+    }
     const res = await respondWith(messageText)
 
     // TODO: handle message
