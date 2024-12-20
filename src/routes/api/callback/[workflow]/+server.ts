@@ -8,7 +8,6 @@ export async function POST(event) {
   await methods.setup()
 
   const workflows = await methods.listWorkflowRuns()
-  console.log(workflows)
   const selectedWorkflows = workflows.filter(w => String(w.id) === event.params.workflow)
   if (selectedWorkflows.length == 0) {
     return await json({error: "Workflow not found"}, {status: 400})
