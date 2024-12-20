@@ -32,7 +32,7 @@ export async function POST(event) {
           await methods.telegramReply(message)
         } catch (error) {
           handleError(error)
-          await respondWith("error handling the /list command: " + error.message)
+          await methods.telegramReply("error handling the /list command: " + error.message)
         }
       } else if (command.startsWith('/build')) {
         try {
@@ -41,7 +41,7 @@ export async function POST(event) {
           await methods.telegramReply("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
         } catch (error) {
           handleError(error)
-          await respondWith("error handling the /build command: " + error.message)
+          await methods.telegramReply("error handling the /build command: " + error.message)
         }
       }
     } else {
