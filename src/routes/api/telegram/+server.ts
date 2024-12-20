@@ -46,7 +46,7 @@ export async function POST(event) {
       },
       body: JSON.stringify({
         chat_id: chatID,
-        text: messageText,
+        text: message,
         reply_parameters: {
           message_id: messageID
         }
@@ -60,6 +60,7 @@ export async function POST(event) {
         const buildCmd = messageText.slice(6).trim()
         const buildArgs = parseBuildArgs(buildCmd)
         await respondWith("command is valid 👍")
+        return genericOKResponse
       } catch (e) {
         await respondWith("error handling the /build command: " + e)
       }
