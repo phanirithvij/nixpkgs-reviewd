@@ -1,4 +1,4 @@
-import users from '#/users.json'
+import { users, repo } from '#/settings.json'
 
 import { json } from '@sveltejs/kit'
 
