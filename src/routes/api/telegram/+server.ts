@@ -101,7 +101,7 @@ export async function POST(event) {
 
         const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/`)
       } catch (e) {
-        console.error({e.stack})
+        console.error({error: e.stack})
         await respondWith("error handling the /build command: " + e)
       }
     } else {
@@ -110,7 +110,7 @@ export async function POST(event) {
 
     return genericOKResponse
   } catch (e) {
-    console.log({e.stack})
+    console.log({error: e.stack})
     return genericNOKResponse
   }
 }
