@@ -127,7 +127,7 @@ export async function POST(event) {
         await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
       } catch (error) {
         handleError(error)
-        await respondWith("error handling the /build command: " + e)
+        await respondWith("error handling the /build command: " + error.message)
       }
     } else {
       await respondWith("you said: " + messageText)
