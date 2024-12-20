@@ -64,16 +64,14 @@ export async function POST(event) {
         const buildCmd = messageText.slice(6).trim()
         const buildArgs = parseBuildArgs(buildCmd)
         await respondWith("command is valid 👍")
-        return genericOKResponse
       } catch (e) {
         await respondWith("error handling the /build command: " + e)
       }
+    } else {
+      await respondWith("you said: " + messageText)
     }
-    await respondWith(messageText)
 
-    // TODO: handle message
-
-    return await json(users, {status: 201})
+    return genericOKResponse
   } catch (e) {
     console.log({error})
     return genericNOKResponse
