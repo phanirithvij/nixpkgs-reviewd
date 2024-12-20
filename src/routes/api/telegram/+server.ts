@@ -65,8 +65,20 @@ export async function POST(event) {
         ref: 'main',
         inputs: args
       })
-    })).json()
-    return workflowTrigger
+    })).text() // actually it returns an empty string
+
+    const res = await fetch(`https://api.github.com/repos/${repo}/actions/runs`, {
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+    const runs = await res.json()
+    const filteredRuns = runs.workflow_runs.filter(w => w.name.includes(String(args.pr)))
+    if (filteredRuns.length == 0) {
+      throw "not created"
+    }
+    return filteredRuns[0].html_url
   }
   async function respondWith(message: string) {
     console.log({type: 'respond', message, chatID, messageID})
@@ -95,11 +107,7 @@ export async function POST(event) {
       try {
         const buildArgs = parseBuildArgs(buildCmd)
         const workflow = await launchWorkflow(buildArgs)
-        console.log({workflow})
-        const result = {workflow, buildArgs}
-        await respondWith("command is valid 👍\n```\n" + JSON.stringify(result) + "\n```")
-
-        const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/`)
+        await respondWith("launched review with args 👍\n```\n" + JSON.stringify(buildArgs) + "\n```\n\n" + workflow)
       } catch (e) {
         console.error({error: e.stack})
         await respondWith("error handling the /build command: " + e)
