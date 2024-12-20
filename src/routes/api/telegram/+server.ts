@@ -2,10 +2,11 @@ import users from '#/users.json'
 
 import { json } from '@sveltejs/kit'
 
-// import { TELEGRAM_TOKEN } from '$env/static/private'
+import { TELEGRAM_TOKEN } from '$env/static/private';
 
 
 const genericOKResponse = new Response(":)", {status: 200})
+const genericNOKResponse = new Response(":(", {status: 500})
 
 export async function POST(event) {
   const data = await event.request.json();
@@ -17,16 +18,27 @@ export async function POST(event) {
   if (!messageID) return genericOKResponse; // message id to reply, should never happen but check anyway
   if (!users[String(chatID)]) return genericOKResponse; // unauthorized
 
-  // TODO: handle message
-  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'POST',
-    body: {
-      chat_id: chatID,
-      text: messageText,
-      reply_parameters: {
-        message_id: messageID
-      }
-    }
-  })
-  return json(users, {status: 201})
+  try {
+    console.log({messageText, chatID, messageID, data})
+
+    // TODO: handle message
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chatID,
+        text: messageText,
+        reply_parameters: {
+          message_id: messageID
+        }
+      })
+    })
+    console.log({result: await res.json()})
+    return json(users, {status: 201})
+  } catch (e) {
+    console.log({error})
+    return genericNOKResponse
+  }
 }
