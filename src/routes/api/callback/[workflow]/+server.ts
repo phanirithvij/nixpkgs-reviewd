@@ -27,7 +27,5 @@ export async function POST(event) {
   const triggerChatID = triggerChatIDs[0]
   const emoji = workflowEmoji(selectedWorkflow)
 
-  await methods.telegramReply(`${emoji} **${name}**\n [Result](${html_url})`, triggerChatID)
-
-  return await json(workflows)
+  return await json(await methods.telegramReply(`${emoji} **${name}**\n [Result](${html_url})`, triggerChatID), {status: 200})
 }
