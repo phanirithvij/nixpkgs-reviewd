@@ -1,4 +1,5 @@
 import { users, repo } from '#/settings.json'
+import botHelp from '#/bot_help.txt'
 
 import { json } from '@sveltejs/kit'
 
@@ -143,9 +144,8 @@ export async function POST(event) {
         await respondWith("error handling the /build command: " + error.message)
       }
     } else {
-      await respondWith("you said: " + messageText)
+      await respondWith(botHelp)
     }
-
     return genericOKResponse
   } catch (error) {
     handleError(error)
