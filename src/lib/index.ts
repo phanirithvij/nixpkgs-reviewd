@@ -130,7 +130,10 @@ export class EventMethods {
     let body = {
       chat_id: chatID,
       text: message,
-      parse_mode: "Markdown"
+      parse_mode: "Markdown",
+      link_preview_options: {
+        is_disabled: true
+      }
     }
     if (messageID) {
       body['reply_parameters'] = {
