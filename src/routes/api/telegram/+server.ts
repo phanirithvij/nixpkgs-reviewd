@@ -26,7 +26,7 @@ function parseBuildArgs(cmdArgs) {
     throw new Error("bad pr name: " + cmdList[0])
   }
   cmd = cmdList.slice(1).join(' ')
-  args['cmd'] = cmd
+  args['extra-args'] = cmd
   return args
 }
 
