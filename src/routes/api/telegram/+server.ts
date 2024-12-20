@@ -23,7 +23,7 @@ function parseBuildArgs(cmdArgs) {
   let pr = parseInt(cmdList[0])
   args['pr'] = pr
   if (isNaN(pr)) {
-    throw "bad pr name: " + cmdList[0]
+    throw new Error("bad pr name: " + cmdList[0])
   }
   cmd = cmdList.slice(1).join(' ')
   args['cmd'] = cmd
@@ -32,13 +32,11 @@ function parseBuildArgs(cmdArgs) {
 
 async function ourFetch(url, args) {
   const res = await fetch(url, args)
-  let ret = null
+  let text = await res.text()
+  let ret = text
   try {
-    ret = await res.json()
-  }
-  catch {
-    ret = await res.text()
-  }
+    ret = JSON.parse(text)
+  } catch {}
   console.log({message: (args.method ?? "GET") + " " + url, ret})
   return ret
 }
@@ -68,7 +66,7 @@ export async function POST(event) {
     console.log({workflowList})
     const thatWorkflows = workflowList.workflows.filter(w => w.path === ".github/workflows/bump.yml")
     if (thatWorkflows.length == 0) {
-      throw "that workflow is not defined on " + repo
+      throw new Error("that workflow is not defined on " + repo)
     }
     const thatWorkflow = thatWorkflows[0].id
     const workflowTrigger = await ourFetch(`https://api.github.com/repos/${repo}/actions/workflows/${thatWorkflow}/dispatches`, {
@@ -94,7 +92,7 @@ export async function POST(event) {
     })
     const filteredRuns = runs.workflow_runs.filter(w => w.name.includes(String(args.pr)))
     if (filteredRuns.length == 0) {
-      throw "not created"
+      throw new Error("not created")
     }
     return filteredRuns[0].html_url
   }
