@@ -3,6 +3,23 @@ import botHelp from '#/bot_help.txt?raw'
 
 import { json } from '@sveltejs/kit'
 
+function workflowEmoji(workflow) {
+  switch (workflow.status) {
+    case 'in_progress':
+      return '⌛'
+    case 'completed':
+      switch (workflow.conclusion) {
+        case 'cancelled':
+          return '🚫'
+        case 'failure':
+          return '❌'
+        case 'success':
+          return '✅'
+      }
+  }
+  return '❔'
+} 
+
 function handleError(e) {
   const {message, stack} = e
   console.error({message, stack})
@@ -145,7 +162,7 @@ export async function POST(event) {
     if (messageText.startsWith('/list')) {
       try {
         const runs = await listWorkflowRuns()
-        const message = runs.map(r => `• [${r.name}](${r.html_url})`).join('\n')
+        const message = runs.map(r => `• ${workflowEmoji(r)} [${r.name}](${r.html_url})`).join('\n')
         await respondWith(message)
       } catch (error) {
         handleError(error)
