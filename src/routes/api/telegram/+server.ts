@@ -68,7 +68,7 @@ export async function POST(event) {
       }
     })
     console.log({workflowList})
-    const thatWorkflows = workflowList.workflows.filter(w => w.path === ".github/workflows/bump.yml")
+    const thatWorkflows = workflowList.workflows.filter(w => w.path === ".github/workflows/nixpkgs-review.yml")
     if (thatWorkflows.length == 0) {
       throw new Error("that workflow is not defined on " + repo)
     }
