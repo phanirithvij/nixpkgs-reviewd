@@ -62,7 +62,7 @@ export async function POST(event) {
       try {
         const buildCmd = messageText.slice(6).trim()
         const buildArgs = parseBuildArgs(buildCmd)
-        await respondWith("command is valid 👍")
+        await respondWith("command is valid 👍\n```\n" + JSON.stringify(buildArgs) + "\n```")
       } catch (e) {
         await respondWith("error handling the /build command: " + e)
       }
