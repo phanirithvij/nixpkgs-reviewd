@@ -93,6 +93,11 @@ jobs:
           name: build-logs-x86_64-linux
           path: /nix/var/log/nix/drvs
           include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-logs-x86_64-linux
+          path: ~/.cache/nixpkgs-review/*/logs
+          include-hidden-files: true
 
   build-aarch64-darwin:
     name: 'aarch64-darwin'
@@ -130,6 +135,11 @@ jobs:
           name: build-logs-aarch64-darwin
           path: /nix/var/log/nix/drvs
           include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-logs-aarch64-darwin
+          path: ~/.cache/nixpkgs-review/*/logs
+          include-hidden-files: true
 
   build-x86_64-darwin:
     name: 'x86_64-darwin'
@@ -166,4 +176,9 @@ jobs:
         with:
           name: build-logs-x86_64-darwin
           path: /nix/var/log/nix/drvs
+          include-hidden-files: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-logs-x86_64-darwin
+          path: ~/.cache/nixpkgs-review/*/logs
           include-hidden-files: true
