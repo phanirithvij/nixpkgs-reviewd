@@ -12,6 +12,7 @@ export function parseBuildArgs(cmdArgs, for_user) {
   args['x86_64-linux'] = true
   if (cmd.includes('+nofreespace')) {
     args['free-space'] = false
+    cmd = cmd.replace('+nofreespace', '')
   }
   if (cmd.includes('+darwin')) {
     args['x86_64-darwin'] = true
