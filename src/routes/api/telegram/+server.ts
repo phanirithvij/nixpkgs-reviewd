@@ -38,7 +38,7 @@ export async function POST(event) {
         try {
           const buildArgs = parseBuildArgs(args, for_user)
           const workflow = await methods.launchWorkflow(buildArgs)
-          await methods.telegramReply(`launched [review](${workflow}) 👍\n\`\`\`\n${JSON.stringify(buildArgs, null, 2)}\n\`\`\``)
+          await methods.telegramReply(`launched [review](${workflow}) on [pull request](https://github.com/NixOS/nixpkgs/pull/${buildArgs.pr}) 👍\n\`\`\`\n${JSON.stringify(buildArgs, null, 2)}\n\`\`\``)
         } catch (error) {
           handleError(error)
           await methods.telegramReply("error handling the /build command: " + error.message)
