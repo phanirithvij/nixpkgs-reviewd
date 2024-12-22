@@ -33,3 +33,32 @@ See bot_help.txt. That's the exact help text sent to the users!
 
 > [!WARNING]
 > Be careful about who you give access to this. The nixpkgs argument flag can allow someone to inject a curl|bash and steal the GitHub token in the workflow.
+
+## Stack and features
+This system is divided in two parts:
+### The action part
+- The part which comments what it is going to do and give relevant links such as realtime build logs.
+- The cleanup workflow: Allows GitHub Actions to build bigger PRs.
+  - If it's enabled it frees space, so the available space is about 100 to 120GB.
+  - The merged part is mounted using BTRFS's compression, and BTRFS tests the compression if it's worth it before allowing it to continue. 
+  - The cache workflow: Allow fast reuse of the nixpkgs clone.
+- DetSys Nix installer.
+- DetSys's magic-nix-cache: nix cache to reuse in builds that uses GitHub caching system. Can handle 429
+(too many requests) errors gracefully.
+- nixpkgs-review
+- Builders for each target. Darwin builds are opt-in per PR basis.
+
+### The cloudflare worker part
+- SvelteKit
+  - Integrates nicely with Cloudflare Workers and allow the user to define API routes in the application.
+  - It uses filesystem based routing, which is explicit. Also allows frontend componentization, but we are
+  not using this extensively so far, but we can!.
+  - Because of Vite (bundler), we can import text files!
+- Raw HTTP handling for Telegram: Our scope with Telegram is very small.
+- Callback system to notify back when builds are done.
+
+### Characteristics
+- Really big PRs can timeout after about 6h, but running it again will basically resume the builds. Tested with #367050 in two rounds.
+- Nix flag `-L` is disabled on purpose because output floods and the log view stops working even with not so big PRs.
+- All logs are uploaded as artifacts at the end of the build.
+
