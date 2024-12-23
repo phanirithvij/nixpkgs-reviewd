@@ -202,6 +202,8 @@ jobs:
           path: ~/.cache/nixpkgs-review/*/report.md
       - name: Result in summary
         if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
         run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-aarch64-darwin:
@@ -250,6 +252,8 @@ jobs:
           path: ~/.cache/nixpkgs-review/*/report.md
       - name: Result in summary
         if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
         run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-x86_64-darwin:
@@ -298,4 +302,6 @@ jobs:
           path: ~/.cache/nixpkgs-review/*/report.md
       - name: Result in summary
         if: always()
+        env:
+          PR: ${{ github.event.inputs.pr }}
         run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
