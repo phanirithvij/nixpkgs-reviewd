@@ -63,6 +63,7 @@ jobs:
             - **Free space**: ${{github.event.inputs.free-space}}
             - **Who asked**: ${{github.event.inputs.for}}
             - **Quiet mode**: ${{github.event.inputs.quiet}}
+            - **PR link**: https://github.com/NixOS/nixpkgs/pull/${{ github.event.inputs.pr }}
 
             **TARGETS**
             - **x86_64-linux**: ${{github.event.inputs.x86_64-linux}}
