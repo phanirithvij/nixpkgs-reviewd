@@ -122,6 +122,7 @@ jobs:
             **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           echo "$TOP_PART" >> $GITHUB_STEP_SUMMARY
+          mkdir -p reports # create if not exists so find doesn't fail
           find reports -type f
           for item in $(find reports -name report.md); do
             echo "" >> $GITHUB_STEP_SUMMARY
