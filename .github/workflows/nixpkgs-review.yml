@@ -107,7 +107,9 @@ jobs:
         run: |
           echo "$TOP_PART" >> report.md
           find reports -type f
-          cat reports/**/*.md >> report.md
+          for item in $(find reports -name report.md); do
+            cat "$item" >> report.md
+          done
       - uses: actions/github-script@v7
         env:
           PR: ${{ github.event.inputs.pr }}
