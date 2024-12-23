@@ -14,4 +14,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ok
+      - run: echo '# Teste' > $GITHUB_STEP_SUMMARY
 
