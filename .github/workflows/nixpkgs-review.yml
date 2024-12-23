@@ -96,7 +96,6 @@ jobs:
           pattern: report-*
       - name: Join reports
         env:
-        env:
           TOP_PART: |
             # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow finished
 
