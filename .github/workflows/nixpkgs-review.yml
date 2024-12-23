@@ -62,6 +62,7 @@ jobs:
             - **Extra args**: `${{github.event.inputs.extra-args}}`
             - **Free space**: ${{github.event.inputs.free-space}}
             - **Who asked**: ${{github.event.inputs.for}}
+            - **Quiet mode**: ${{github.event.inputs.quiet}}
 
             **TARGETS**
             - **x86_64-linux**: ${{github.event.inputs.x86_64-linux}}
