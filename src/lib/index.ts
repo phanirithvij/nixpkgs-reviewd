@@ -14,6 +14,10 @@ export function parseBuildArgs(cmdArgs, for_user) {
     args['free-space'] = false
     cmd = cmd.replace('+nofreespace', '')
   }
+  if (cmd.includes('+quiet')) {
+    args['quiet'] = true
+    cmd = cmd.replace('+quiet', '')
+  }
   if (cmd.includes('+darwin')) {
     args['x86_64-darwin'] = true
     args['aarch64-darwin'] = true

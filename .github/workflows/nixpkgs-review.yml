@@ -8,6 +8,10 @@ run-name: 'nixpkgs-review #${{ github.event.inputs.pr }} for ${{ github.event.in
 on:
   workflow_dispatch:
     inputs:
+      quiet:
+        description: "Do not tell that the workflow started"
+        type: boolean
+        default: false
       pr:
         description: "PR number"
         type: number
@@ -66,6 +70,7 @@ jobs:
         run:
           echo "$WORKFLOW_INFORMATION" >> $GITHUB_STEP_SUMMARY
       - uses: actions/github-script@v7
+        if: ${{ github.event.inputs.quiet == 'true' }}
         env:
           COMMENT: |
             # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow started
