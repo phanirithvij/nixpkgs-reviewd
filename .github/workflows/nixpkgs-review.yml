@@ -121,7 +121,7 @@ jobs:
               issue_number: process.env.PR,
               owner: 'NixOS',
               repo: 'nixpkgs',
-              body: fs.readFileSync("report.md")
+              body: fs.readFileSync("report.md", 'utf8')
             })
 
   build-x86_64-linux:
