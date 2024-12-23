@@ -138,7 +138,6 @@ jobs:
               issue_number: process.env.PR,
               owner: 'NixOS',
               repo: 'nixpkgs',
-              body: process.env.COMMENT
               body: fs.readFileSync("report.md", 'utf8')
             })
 
