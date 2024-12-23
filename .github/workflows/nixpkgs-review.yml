@@ -195,6 +195,9 @@ jobs:
         with:
           name: report-x86_64-linux
           path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-aarch64-darwin:
     name: 'aarch64-darwin'
@@ -240,6 +243,9 @@ jobs:
         with:
           name: report-aarch64-darwin
           path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
 
   build-x86_64-darwin:
     name: 'x86_64-darwin'
@@ -285,3 +291,6 @@ jobs:
         with:
           name: report-x86_64-darwin
           path: ~/.cache/nixpkgs-review/*/report.md
+      - name: Result in summary
+        if: always()
+        run: cat ~/.cache/nixpkgs-review/pr-$PR/report.md >> $GITHUB_STEP_SUMMARY
