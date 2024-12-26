@@ -78,6 +78,7 @@ jobs:
             # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow started
 
             **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            **Extra args**: `${{github.event.inputs.extra-args}}`
           PR: ${{ github.event.inputs.pr }}
         with:
           github-token: ${{secrets.GH_TOKEN_NIXPKGS_REVIEW}}
@@ -170,7 +171,7 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -220,7 +221,7 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -270,7 +271,7 @@ jobs:
           git config --global user.email "user@example.com"
           git config --global user.name "user"
           cd $GITHUB_WORKSPACE/nixpkgs
-          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell $EXTRA_ARGS
+          nix run nixpkgs#nixpkgs-review -- pr $PR --print-result --no-shell --eval local $EXTRA_ARGS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
