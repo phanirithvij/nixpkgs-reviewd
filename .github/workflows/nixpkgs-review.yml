@@ -103,32 +103,13 @@ jobs:
           pattern: report-*
       - name: Join reports
         env:
-          TOP_PART: |
-            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow finished
-
-            - **Extra args**: `${{github.event.inputs.extra-args}}`
-            - **Free space**: ${{github.event.inputs.free-space}}
-            - **Who asked**: ${{github.event.inputs.for}}
-
-            **TARGETS**
-            - **x86_64-linux**: ${{github.event.inputs.x86_64-linux}}
-            - **x86_64-darwin**: ${{github.event.inputs.x86_64-darwin}}
-            - **aarch64-darwin**: ${{github.event.inputs.aarch64-darwin}}
-
-            **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            # Reports
           COMMENT: |
             # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow finished
 
             **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          echo "$TOP_PART" >> $GITHUB_STEP_SUMMARY
           mkdir -p reports # create if not exists so find doesn't fail
           find reports -type f
-          for item in $(find reports -name report.md); do
-            echo "" >> $GITHUB_STEP_SUMMARY
-            cat "$item" >> $GITHUB_STEP_SUMMARY
-          done
 
           echo "$COMMENT" >> report.md
           for item in $(find reports -name report.md); do
