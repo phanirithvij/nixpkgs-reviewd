@@ -203,9 +203,9 @@ jobs:
     runs-on: ubuntu-24.04-arm
 
     steps:
-      - name: Free up space
-        uses: lucasew/action-i-only-care-about-nix@main
-        if: ${{ github.event.inputs.free-space == 'true' }}
+      # - name: Free up space
+      #   uses: lucasew/action-i-only-care-about-nix@main
+      #   if: ${{ github.event.inputs.free-space == 'true' }}
 
       - name: Prepare for Nix if cleaned up
         run: |
