@@ -62,7 +62,7 @@ jobs:
       - name: Show summary
         env:
           WORKFLOW_INFORMATION: |
-            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow started
+            # [nixpkgs-reviewd](${{github.server_url}}/nixosbrasil/nixpkgs-reviewd) workflow started
 
             - **Extra args**: `${{github.event.inputs.extra-args}}`
             - **Free space**: ${{github.event.inputs.free-space}}
@@ -80,7 +80,7 @@ jobs:
         if: ${{ github.event.inputs.quiet != 'true' }}
         env:
           COMMENT: |
-            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow started
+            # [nixpkgs-reviewd](${{github.server_url}}/nixosbrasil/nixpkgs-reviewd) workflow started
 
             **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             **Extra args**: `${{github.event.inputs.extra-args}}`
@@ -111,7 +111,7 @@ jobs:
       - name: Join reports
         env:
           COMMENT: |
-            # [nixpkgs-reviewd](${{github.server_url}}/${{ github.repository }}) workflow finished
+            # [nixpkgs-reviewd](${{github.server_url}}/nixosbrasil/nixpkgs-reviewd) workflow finished
 
             **Status and logs**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
